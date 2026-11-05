@@ -23,3 +23,11 @@ mx.scratch
 CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
+
+# 忽略个人的 OLED 屏幕相关代码
+Core/Src/oled.c
+Core/Src/font.c
+Core/Src/display.c
+Core/Inc/oled.h
+Core/Inc/font.h
+Core/Inc/display.h
