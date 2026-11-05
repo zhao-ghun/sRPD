@@ -1,0 +1,25 @@
+# 忽略整个 build 文件夹
+build
+
+# 忽略 CubeMX 生成的临时缓存文件
+mx.scratch
+
+# 不要忽略 .settings 文件夹
+!.settings
+
+# 忽略 VS Code 的本地配置
+.vscode/
+*.code-workspace
+
+# 忽略编译产物
+*.o
+*.d
+*.elf
+*.hex
+*.bin
+*.map
+
+# 忽略 CMake 自动生成的缓存
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
