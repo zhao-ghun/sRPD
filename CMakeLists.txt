@@ -49,6 +49,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     Core/Src/oled.c
     Core/Src/font.c
     Core/Src/display.c
+    Core/Src/uart.c
 )
 
 # Add include paths
