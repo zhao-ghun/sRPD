@@ -50,6 +50,9 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     Core/Src/font.c
     Core/Src/display.c
     Core/Src/uart.c
+    Core/Src/servo.c
+    Core/Src/vl53l0x.c
+    Core/Src/buzzer.c
 )
 
 # Add include paths

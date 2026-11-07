@@ -47,7 +47,7 @@ void UART_Task(void){
 
             HAL_UART_Transmit(&huart1, (uint8_t*)reply, strlen(reply), 100); //发送回复信息
 
-            Display_ShowMessage(reply); //通过OLED显示回复信息
+            Display_ShowMessage(reply); // 把信息同步给OLED显示
         }
 
         memset(receiveData, 0, sizeof(receiveData));
