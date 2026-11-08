@@ -1,4 +1,5 @@
 #include "vl53l0x.h"
+#include "display.h"
 
 #define ADDR 0x52 // 地址
 
@@ -162,4 +163,22 @@ uint16_t VL53L0X_MedianDistance(void)
     d2 = d1>d2?(d2>d3?d2:(d1>d3?d3:d1)):(d1>d3?d1:(d2>d3?d3:d2));
 
     return d2;
+}
+
+void Vl53l0x_Init(void){
+    uint8_t ok = 0;
+
+    for (uint8_t t = 0; t < 3; t++){
+        if (VL53L0X_Init()){
+        ok = 1;
+        break;
+        }
+        HAL_Delay(200);
+    }
+
+    if (!ok){
+        char err[] = "SENSOR ERROR";
+        Display_Error(err);
+        while (1){}
+    }
 }

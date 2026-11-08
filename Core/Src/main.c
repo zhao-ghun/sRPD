@@ -32,6 +32,9 @@
 #include "servo.h"
 #include "vl53l0x.h"
 #include "buzzer.h"
+#include "key.h"
+#include "radar.h"
+#include "oled.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -102,71 +105,37 @@ int main(void)
   MX_TIM2_Init();
   MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
-  Display_Init();   // 初始化 OLED
-  DisplayOn();      // 显示学号姓名
-  Start_Run();      // 开机自检：呼吸灯 3 次（约 6 秒）
+  Display_Init(); // 初始化OLED
+  DisplayOn(); // 显示学号姓名
+  Start_Run(); // 呼吸灯闪烁
 
-  UART_Init();      // 串口 DMA 接收
-  Servo_Init();     // 舵机 PWM
-  Buzzer_Init();    // 蜂鸣器 PWM
-
-  // 激光测距自检
-  uint8_t ok = 0;
-
-  for (uint8_t t = 0; t < 3; t++)
-  {
-    if (VL53L0X_Init()){
-      ok = 1;
-      break;
-    }
-    HAL_Delay(200);
-  }
-
-  if (!ok){
-    char err[] = "SENSOR ERROR";
-    Display_Error(err);
-    while (1){}
-  }
-
-  uint16_t dist[19]; // 19个角度的距离
-
-  for (uint8_t i = 0; i < 19; i++) // 初始化为无目标
-  {
-    dist[i] = 0xFFFF;
-  }
+  UART_Init(); // 初始化串口
+  Servo_Init(); // 初始化舵机
+  Buzzer_Init(); // 初始化蜂鸣器
+  Vl53l0x_Init(); // 初始化Vl53l0x
+  Radar_Init(); // 初始化雷达
+  uint8_t mode = 0; // 初始化雷达模式
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    for (uint8_t i = 0; i < 19; i++)
-    {
-      uint8_t  angle = (uint8_t)(i * 10); // 0~180 度
-      uint16_t d;
-
-      UART_Task(); // 串口任务：每个角度处理一次
-
-      Servo_Angle(angle); // 舵机转到这个角度
-      HAL_Delay(100); // 等它停稳
-
-      d = VL53L0X_MedianDistance(); // 测三次取中值
-
-      if (d != 0xFFFF)
-      {
-        if (d > 70) d = (uint16_t)(d - 70); // 减固定偏差
-        if (d > 400) d = 0xFFFF; // 超过 40cm 当没目标
+    if (mode == 0){
+      if (Radar_Scan()){
+        mode = 1; // 扫描中按键切到跟踪
+        Buzzer_Off();
       }
-
-      dist[i] = d;
-
-      Buzzer_Task(d); // 20cm 内报警
-      Display_Radar(dist, angle); // 刷新一帧雷达图
+    } else {
+      if (Radar_Track()) {
+        mode = 0; // 跟踪中按键切回扫描
+        Buzzer_Off();
+      }
     }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-  }
+    }
   /* USER CODE END 3 */
 }
 

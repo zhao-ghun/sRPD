@@ -9,7 +9,7 @@ extern "C" {
 #include "i2c.h"
 #include <stdint.h>
 
-uint8_t  VL53L0X_Init(void);
+void Vl53l0x_Init(void);
 uint16_t VL53L0X_ReadDistance_mm(void);
 uint16_t VL53L0X_MedianDistance(void);
 

@@ -53,6 +53,8 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     Core/Src/servo.c
     Core/Src/vl53l0x.c
     Core/Src/buzzer.c
+    Core/Src/key.c
+    Core/Src/radar.c
 )
 
 # Add include paths
